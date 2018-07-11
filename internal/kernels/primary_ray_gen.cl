@@ -7,6 +7,17 @@ int hash(int x) {
     return x;
 }
 
+float floatConstruct(uint m) {
+    const uint ieeeMantissa = 0x007FFFFFu; // binary32 mantissa bitmask
+    const uint ieeeOne      = 0x3F800000u; // 1.0 in IEEE binary32
+
+    m &= ieeeMantissa;                     // Keep only mantissa bits (fractional part)
+    m |= ieeeOne;                          // Add fractional part to 1.0
+
+    float  f = uintBitsToFloat( m );       // Range [1:2]
+    return f - 1.0;                        // Range [0:1]
+}
+
 float3 get_cam_dir(const float x, const float y, const camera_t *cam, int w, int h) {
     float k = native_tan(0.5f * cam->origin.w * PI / 180.0f);    
     float3 d = (float3)(2 * k * x / w - k, 2 * k * -y / h + k, 1);
