@@ -162,7 +162,7 @@ float4 ShadeSurface(const int index, const int iteration, __global const float *
 
     normals = 2.0f * normals - 1.0f;
 
-    N = normals.x * B + normals.z * N + normals.y * T;
+    //N = normals.x * B + normals.z * N + normals.y * T;
     
     //////////////////////////////////////////
 
@@ -208,19 +208,17 @@ float4 ShadeSurface(const int index, const int iteration, __global const float *
         col = albedo.xyz * env.sun_col * v * k;
 
         const int _hi = iteration & (HaltonSeqLen - 1);
-        //float2 _off = (float2)(12.9898f * x, 78.233f * y);
-        float2 _off = (float2)(12.9898f * x + 78.233f * y, 12.9898f * y + 78.233f * x);
-        float2 _unused;
-        _off = fract(sin(_off) * (float2)(43758.5453f, 12545.1212f), &_unused);
 
-        _off.x = halton[(hash(index) & (HaltonSeqLen - 1)) * 2 + 0];
-        _off.y = halton[(hash(index) & (HaltonSeqLen - 1)) * 2 + 1];
+        float f1 = construct_float(hash(index));
+        float f2 = construct_float(hash(hash(index)));
 
         float _unused2;
-        const float z = fract(halton[_hi * 2] + _off.x, &_unused2);
+        const float z = fract(halton[_hi * 2] + f1, &_unused2);
+
         const float temp = native_sqrt(1.0f - z * z);
 
-        const float phi = fract(halton[_hi * 2 + 1] + _off.y, &_unused2) * 2 * PI;
+        const float phi = fract(halton[_hi * 2 + 1] + f2, &_unused2) * 2 * PI;
+
         float cos_phi;
         const float sin_phi = sincos(phi, &cos_phi);
 
