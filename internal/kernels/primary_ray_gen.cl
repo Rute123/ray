@@ -14,8 +14,8 @@ float construct_float(uint m) {
     m &= ieeeMantissa;                     // Keep only mantissa bits (fractional part)
     m |= ieeeOne;                          // Add fractional part to 1.0
 
-    const float  *f = (const float *)&m;   // Range [1:2]
-    return *f - 1.0;                       // Range [0:1]
+    float  f = as_float(m);                // Range [1:2]
+    return f - 1.0;                        // Range [0:1]
 }
 
 float3 get_cam_dir(const float x, const float y, const camera_t *cam, int w, int h) {

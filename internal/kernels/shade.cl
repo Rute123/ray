@@ -162,7 +162,7 @@ float4 ShadeSurface(const int index, const int iteration, __global const float *
 
     normals = 2.0f * normals - 1.0f;
 
-    //N = normals.x * B + normals.z * N + normals.y * T;
+    N = normals.x * B + normals.z * N + normals.y * T;
     
     //////////////////////////////////////////
 
